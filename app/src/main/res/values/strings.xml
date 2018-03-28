@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">JustDoIt</string>
+    <string name="hint_what_is_the_task">Aká je úloha?</string>
+    <string name="completed">Splnená?</string>
 </resources>
