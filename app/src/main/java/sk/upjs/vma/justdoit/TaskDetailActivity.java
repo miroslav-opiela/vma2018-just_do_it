@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class TaskDetailActivity extends AppCompatActivity {
 
     private TaskDao taskDao = TaskDao.INSTANCE;
+    private Task task;
 
     private EditText editTextTaskName;
     private CheckBox checkBoxTaskCompleted;
@@ -20,14 +21,24 @@ public class TaskDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
 
-        //long taskId = getIntent().getLongExtra(TaskListActivity.TASK_ID_EXTRA, -1);
+        editTextTaskName = findViewById(R.id.editTextTaskName);
+        checkBoxTaskCompleted = findViewById(R.id.checkboxTaskCompleted);
+
         Long taskId = (Long) getIntent().getSerializableExtra(
                 TaskListActivity.TASK_ID_EXTRA);
 
         Log.d("DETAIL", "intent includes " + taskId);
 
-        editTextTaskName = findViewById(R.id.editTextTaskName);
-        checkBoxTaskCompleted = findViewById(R.id.checkboxTaskCompleted);
+        if (taskId == null) {
+            // pripad ak vytvaram novu ulohu
+            task = new Task();
+        } else {
+            // pripad ak editujem existujucu ulohu
+            task = taskDao.getTask(taskId);
+        }
+
+        editTextTaskName.setText(task.getName());
+        checkBoxTaskCompleted.setChecked(task.isDone());
     }
 
     @Override
@@ -37,7 +48,6 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void saveTask() {
-        Task task = new Task();
         task.setName(editTextTaskName.getText().toString());
         task.setDone(checkBoxTaskCompleted.isChecked());
         taskDao.saveOrUpdate(task);
