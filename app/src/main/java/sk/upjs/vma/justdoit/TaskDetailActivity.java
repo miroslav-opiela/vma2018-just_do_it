@@ -1,5 +1,6 @@
 package sk.upjs.vma.justdoit;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -78,6 +79,15 @@ public class TaskDetailActivity extends AppCompatActivity {
             // priznak aby sa uloha neukladala po navrate z detail aktivity
             ignoreSaveOnFinish = true;
             finish();
+            return true;
+        }
+
+        // v tomto pripade to funguje aj bez nasledovneho kodu
+        if (id == android.R.id.home) {
+            finish();
+            // https://developer.android.com/training/implementing-navigation/ancestral.html
+            // dokumentacia odporuca pouzit tuto metodu, ktora obsahuje aj volanie finish
+            // NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 
