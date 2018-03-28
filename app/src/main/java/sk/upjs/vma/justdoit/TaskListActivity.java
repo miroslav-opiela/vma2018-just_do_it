@@ -19,6 +19,8 @@ public class TaskListActivity extends AppCompatActivity {
 
     private TaskDao taskDao = TaskDao.INSTANCE;
 
+    private ListView listView;
+
     public static final String TASK_ID_EXTRA = "taskId";
 
     @Override
@@ -26,13 +28,7 @@ public class TaskListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
 
-        ListView listView = findViewById(R.id.listViewTasks);
-
-        List<Task> list = taskDao.list();
-
-        ListAdapter adapter = new ArrayAdapter<Task>(this,
-                android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
+        listView = findViewById(R.id.listViewTasks);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -49,6 +45,18 @@ public class TaskListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<Task> list = taskDao.list();
+
+        ListAdapter adapter = new ArrayAdapter<Task>(this,
+                android.R.layout.simple_list_item_1, list);
+
+        // adapter sa nastavuje v onResume, aby sa zoznam aktualizoval pri navrate z DetailActivity
+        listView.setAdapter(adapter);
     }
 
     @Override
