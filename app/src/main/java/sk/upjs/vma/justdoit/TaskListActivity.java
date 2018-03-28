@@ -1,17 +1,19 @@
 package sk.upjs.vma.justdoit;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -53,7 +55,20 @@ public class TaskListActivity extends AppCompatActivity {
         List<Task> list = taskDao.list();
 
         ListAdapter adapter = new ArrayAdapter<Task>(this,
-                android.R.layout.simple_list_item_1, list);
+                android.R.layout.simple_list_item_1, list) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView listItemView = (TextView) super.getView(position, convertView, parent);
+
+                Task task = getItem(position);
+                if (task.isDone()) {
+                    listItemView.setPaintFlags(listItemView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+
+                listItemView.setText(task.getName());
+                return listItemView;
+            }
+        };
 
         // adapter sa nastavuje v onResume, aby sa zoznam aktualizoval pri navrate z DetailActivity
         listView.setAdapter(adapter);
